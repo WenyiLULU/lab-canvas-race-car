@@ -2,6 +2,7 @@
 const startScreen = document.querySelector('.game-intro');
 const gameBord = document.querySelector('#game-board');
 const canvas = document.querySelector('#canvas');
+const restart = document.querySelector('#restart');
 
 
 // canvas variables settings
@@ -143,6 +144,7 @@ function animate(){
   if (gameOver) {
     cancelAnimationFrame(animationFrameID);
     drawGameOverBoard();
+    restart.style.display = 'block';
   } else {
     animationFrameID = requestAnimationFrame(animate);
   }
@@ -154,12 +156,40 @@ function startGame() {
   setGrameBord()
   animate()
 }
+function restartGame(){
+  restart.style.display = 'none';
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  ctx.drawImage(imgRaod, 0, 0, canvas.width, canvas.height)
+  
+  carX = (canvas.width - carWidth)/2;
+  carY = canvas.height - carHeight - 25;
+  drawCar()
 
+  score = 0;
+  drawScore()
+
+  blocks[0].y = 0;
+  blocks[1].y = spaceBlock;
+  blocks[2].y = spaceBlock * 2;
+  moveBlock()
+
+  gameOver = false;
+  animate()
+
+}
 
 
 window.onload = () => {
+  restart.style.display = 'none';
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+
   document.getElementById('start-button').onclick = () => {
     startGame(); 
+  };
+
+  document.getElementById('restart').onclick = () => {
+    restartGame(); 
   };
 
   document.addEventListener("keydown", event => {
