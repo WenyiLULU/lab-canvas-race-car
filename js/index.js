@@ -15,7 +15,7 @@ const border = 35
 const imgCar = new Image();
 imgCar.src = "../images/car.png"
 const carWidth = 50;
-const carHeight = 120;
+const carHeight = 100;
 let carX = (canvas.width - carWidth)/2;
 let carY = canvas.height - carHeight - 25;
 const carSpeed = 3;
@@ -24,12 +24,13 @@ let carGoRight = false;
 
 // blocks variables settings
 const blockHeight = 20;
-const blockWidthMax = canvas.width - carWidth * 6;
+const blockWidthMax = canvas.width - border - carWidth * 4;
 const blockSpeed = 1;
 let spaceBlock = -220;
 
 // score and finish game
 let score = 0;
+let best = 0;
 let gameOver = false;
 let animationFrameID 
 
@@ -62,7 +63,7 @@ function getRandomX(){
   return Math.floor(Math.random() * canvas.width) - 100;
 }
 function getRandomBlockW(){
-  return Math.floor(Math.random() * blockWidthMax) + 200;
+  return Math.floor(Math.random() * blockWidthMax) + 100;
 }
 const blocks = [
   {
@@ -94,11 +95,13 @@ function moveBlock(){
   blocks.forEach((block) => {
    
     if (block.y + block.h === carY){
-      if (carX <= block.x + block.w && carX >= block.x){
+      if (carX <= block.x + block.w && carX + carWidth >= block.x){
         gameOver = true;
       } else {
         score += 1;
       }
+    } else if (block.y + block.h > carY && block.y < canvas.height - 25 && carX <= block.x + block.w && carX + carWidth >= block.x){
+      gameOver = true;
     }
     
     if(block.y > canvas.height){
@@ -117,6 +120,8 @@ function drawScore() {
   ctx.font = "30px sans-serif";
   ctx.fillStyle = "white";
   ctx.fillText(`Score : ${score}`, 80, 50);
+  ctx.fillStyle = "yellow";
+  ctx.fillText(`Record : ${best}`, 350, 50);
   ctx.closePath();
 }
 
@@ -142,6 +147,9 @@ function animate(){
   moveBlock()
   drawScore()
   if (gameOver) {
+    if (score > best) {
+      best = score;
+    }
     cancelAnimationFrame(animationFrameID);
     drawGameOverBoard();
     restart.style.display = 'block';
