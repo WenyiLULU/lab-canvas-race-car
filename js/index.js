@@ -26,36 +26,17 @@ const blockWidthMax = canvas.width - carWidth * 5;
 const blockSpeed = 1;
 let blockY = 0;
 
-const blocks = [
-  {
-    x: getRandomX(),
-    y: blockY,
-    h: blockHeight,
-    w: getRandomBlockW()
-  },
-  {
-    x: getRandomX(),
-    y: blockY-200,
-    h: blockHeight,
-    w: getRandomBlockW()
-  },
-  {
-    x: getRandomX(),
-    y: blockY-400,
-    h: blockHeight,
-    w: getRandomBlockW()
-  },
-]
 
+// ---- set game ground -------
 function setGrameBord(){
   canvas.style.display = 'block';
 }
 
+// ---- create car ------
 function drawCar (){
   ctx.drawImage(imgCar, carX, carY, carWidth, carHeight)
   carMove()
 }
-
 function carMove(){
   if (carGoLeft){
     if (carX > border){
@@ -68,32 +49,58 @@ function carMove(){
   }
 }
 
+// ---- creat blocks -------
 function getRandomX(){
-  return Math.floor(Math.random() * canvas.width);
+  return Math.floor(Math.random() * canvas.width) - 100;
 }
 function getRandomBlockW(){
   return Math.floor(Math.random() * blockWidthMax) + 200;
 }
+
+
+const blocks = [
+  {
+    x: getRandomX(),
+    y: blockY,
+    w: getRandomBlockW(),
+    h: blockHeight
+  },
+  {
+    x: getRandomX(),
+    y: blockY-200,
+    w: getRandomBlockW(),
+    h: blockHeight
+  },
+  {
+    x: getRandomX(),
+    y: blockY-400,
+    w: getRandomBlockW(),
+    h: blockHeight
+  },
+]
 
 function drawBlock(x, y, w, h) {
   ctx.beginPath();
   ctx.fillStyle = "tomato";
   ctx.fillRect(x, y, w, h);
   ctx.closePath(); 
-  
 }
 
 function moveBlock(){
   
-  blocks.forEach(block => {
+  blocks.forEach((block) => {
     block.y += blockSpeed;
     if(block.y > canvas.height){
       block.y = 0;
+      block.x = getRandomX();
+      block.w = getRandomBlockW();
     }
     drawBlock(block.x, block.y, block.w, block.h);
+    console.log(blocks)
   })
-
 }
+
+
 
 function animate(){
   ctx.clearRect(0, 0, canvas.width, canvas.height)
